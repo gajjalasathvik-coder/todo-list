@@ -4,6 +4,13 @@ A modern, responsive, and beginner-friendly To-Do List web application built ent
 
 ---
 
+## 🌐 Live Website Demo
+
+Try the live application directly in your browser:
+**https://gajjalasathvik-coder.github.io/todo-list/**
+
+---
+
 ## ✨ Features
 
 - **Add Tasks**: Quickly add tasks with keyboard support (press <kbd>Enter</kbd>).
