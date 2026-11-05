@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Task Dashboard</title>
+  <meta name="description" content="A clean, responsive, client-side To-Do List web application with dark mode and localStorage persistence.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">FocusFlow</h1>
+          <p class="brand-subtitle">Streamlined Daily Tasks</p>
+        </div>
+      </div>
+
+      <!-- Theme Switcher Button -->
+      <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle dark and light theme" title="Toggle theme">
+        <span class="icon-sun" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </span>
+        <span class="icon-moon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+        <span id="themeLabelText" class="theme-label-text">Dark Mode</span>
+      </button>
+    </header>
+
+    <!-- Dashboard Stat Cards -->
+    <section class="stats-grid" aria-label="Task statistics">
+      <div class="stat-card stat-total">
+        <div class="stat-info">
+          <span class="stat-label">Total Tasks</span>
+          <span id="totalCount" class="stat-number">0</span>
+        </div>
+        <div class="stat-icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-card stat-pending">
+        <div class="stat-info">
+          <span class="stat-label">Pending</span>
+          <span id="pendingCount" class="stat-number">0</span>
+        </div>
+        <div class="stat-icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-card stat-completed">
+        <div class="stat-info">
+          <span class="stat-label">Completed</span>
+          <span id="completedCount" class="stat-number">0</span>
+        </div>
+        <div class="stat-icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Card -->
+    <main class="dashboard-card">
+      <!-- Task Creation Form -->
+      <form id="taskForm" class="task-form" autocomplete="off">
+        <div class="input-wrapper">
+          <label for="taskInput" class="visually-hidden">Add a new task</label>
+          <input
+            id="taskInput"
+            name="taskInput"
+            type="text"
+            class="task-input"
+            placeholder="What needs to be done?..."
+            maxlength="200"
+            required
+          >
+          <button type="submit" id="addTaskBtn" class="primary-btn" aria-label="Add task">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add Task</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Task Controls & Filters -->
+      <div class="task-toolbar">
+        <div class="filter-group" role="tablist" aria-label="Filter tasks">
+          <button
+            type="button"
+            class="filter-btn active"
+            data-filter="all"
+            role="tab"
+            aria-selected="true"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-filter="pending"
+            role="tab"
+            aria-selected="false"
+          >
+            Pending
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-filter="completed"
+            role="tab"
+            aria-selected="false"
+          >
+            Completed
+          </button>
+        </div>
+
+        <div class="toolbar-meta">
+          <span id="filteredCountText" class="filter-count-badge">0 items</span>
+        </div>
+      </div>
+
+      <!-- Task List Container -->
+      <section aria-label="Task items list">
+        <ul id="taskList" class="task-list"></ul>
+
+        <!-- Empty State UI (shown when no tasks match filter) -->
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon-wrapper" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <h2 id="emptyStateTitle" class="empty-title">No tasks found</h2>
+          <p id="emptyStateMessage" class="empty-desc">Get started by creating your first task above.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Built with clean HTML5, CSS3, &amp; Vanilla JavaScript &bull; All data stays in your browser.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

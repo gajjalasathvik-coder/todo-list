@@ -1,0 +1,774 @@
+/* ==========================================================================
+   FocusFlow - Modern Dashboard CSS Stylesheet
+   Uses CSS Custom Properties for seamless Light / Dark theme switching.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Theme Variables & Color System
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color Palette - Light Mode Default */
+  --bg-app: #f4f7fb;
+  --bg-glow-1: rgba(99, 102, 241, 0.12);
+  --bg-glow-2: rgba(236, 72, 153, 0.1);
+
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+  --card-shadow-hover: 0 14px 28px -4px rgba(15, 23, 42, 0.08);
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+  --input-focus-border: #6366f1;
+  --input-focus-ring: rgba(99, 102, 241, 0.18);
+
+  /* Brand / Primary */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --primary-text: #ffffff;
+
+  /* Accent Stat Colors */
+  --stat-total-bg: #eef2ff;
+  --stat-total-icon: #4f46e5;
+  --stat-pending-bg: #fff7ed;
+  --stat-pending-icon: #ea580c;
+  --stat-completed-bg: #ecfdf5;
+  --stat-completed-icon: #059669;
+
+  /* Task Item States */
+  --item-bg: #ffffff;
+  --item-border: #e2e8f0;
+  --item-hover-bg: #f8fafc;
+  --item-checked-bg: #f8fafc;
+
+  /* Actions & Badges */
+  --btn-default-bg: #f1f5f9;
+  --btn-default-hover: #e2e8f0;
+  --danger-color: #ef4444;
+  --danger-hover-bg: #fee2e2;
+  --danger-text: #b91c1c;
+
+  --badge-bg: #e2e8f0;
+  --badge-text: #475569;
+
+  /* Transitions & Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s ease;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --bg-app: #090d16;
+  --bg-glow-1: rgba(99, 102, 241, 0.18);
+  --bg-glow-2: rgba(168, 85, 247, 0.14);
+
+  --card-bg: #111827;
+  --card-border: #1e293b;
+  --card-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.5);
+  --card-shadow-hover: 0 18px 36px -4px rgba(0, 0, 0, 0.65);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+
+  --input-bg: #0b1120;
+  --input-border: #334155;
+  --input-focus-border: #818cf8;
+  --input-focus-ring: rgba(129, 140, 248, 0.25);
+
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --primary-text: #ffffff;
+
+  --stat-total-bg: rgba(99, 102, 241, 0.12);
+  --stat-total-icon: #818cf8;
+  --stat-pending-bg: rgba(249, 115, 22, 0.12);
+  --stat-pending-icon: #fb923c;
+  --stat-completed-bg: rgba(16, 185, 129, 0.12);
+  --stat-completed-icon: #34d399;
+
+  --item-bg: #151e32;
+  --item-border: #1f2b42;
+  --item-hover-bg: #1a253e;
+  --item-checked-bg: #0f172a;
+
+  --btn-default-bg: #1e293b;
+  --btn-default-hover: #334155;
+  --danger-color: #f87171;
+  --danger-hover-bg: rgba(239, 68, 68, 0.15);
+  --danger-text: #fca5a5;
+
+  --badge-bg: #1e293b;
+  --badge-text: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Global Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.5;
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+  padding: 2.5rem 1rem;
+}
+
+/* Visually Hidden Helper (for accessible form labels) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Background Ambient Glows */
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  transition: background var(--transition-slow);
+}
+
+.bg-glow-1 {
+  top: -10%;
+  left: -10%;
+  width: 45vw;
+  height: 45vw;
+  background: var(--bg-glow-1);
+}
+
+.bg-glow-2 {
+  bottom: -10%;
+  right: -10%;
+  width: 40vw;
+  height: 40vw;
+  background: var(--bg-glow-2);
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout Shell
+   -------------------------------------------------------------------------- */
+.app-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Header & Theme Toggle
+   -------------------------------------------------------------------------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.25rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: var(--primary-gradient);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px -2px rgba(79, 70, 229, 0.4);
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.brand-subtitle {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.theme-toggle-btn {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-full);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all var(--transition-normal);
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--btn-default-hover);
+  transform: translateY(-1px);
+}
+
+/* Theme toggle icon state switching */
+[data-theme="dark"] .icon-moon {
+  display: none;
+}
+[data-theme="dark"] .icon-sun {
+  display: block;
+}
+:root:not([data-theme="dark"]) .icon-moon {
+  display: block;
+}
+:root:not([data-theme="dark"]) .icon-sun {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Dashboard Stat Cards
+   -------------------------------------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.775rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.stat-number {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 0.2rem;
+  color: var(--text-main);
+  transition: color var(--transition-normal);
+}
+
+.stat-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-total .stat-icon-wrapper {
+  background-color: var(--stat-total-bg);
+  color: var(--stat-total-icon);
+}
+
+.stat-pending .stat-icon-wrapper {
+  background-color: var(--stat-pending-bg);
+  color: var(--stat-pending-icon);
+}
+
+.stat-completed .stat-icon-wrapper {
+  background-color: var(--stat-completed-bg);
+  color: var(--stat-completed-icon);
+}
+
+/* --------------------------------------------------------------------------
+   6. Main Dashboard Card & Task Input Form
+   -------------------------------------------------------------------------- */
+.dashboard-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: var(--card-shadow);
+  transition: background-color var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-normal);
+}
+
+.task-form {
+  margin-bottom: 1.3rem;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.task-input {
+  flex: 1;
+  background-color: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-slow);
+}
+
+.task-input::placeholder {
+  color: var(--text-subtle);
+}
+
+.task-input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 4px var(--input-focus-ring);
+}
+
+.primary-btn {
+  background: var(--primary-gradient);
+  color: var(--primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  white-space: nowrap;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  filter: brightness(1.05);
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   7. Toolbar & Filters
+   -------------------------------------------------------------------------- */
+.task-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid var(--card-border);
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: inline-flex;
+  background-color: var(--btn-default-bg);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  gap: 0.2rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius-md) - 2px);
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  background-color: var(--card-bg);
+  color: var(--primary);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+}
+
+.toolbar-meta {
+  display: flex;
+  align-items: center;
+}
+
+.filter-count-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--badge-text);
+  background-color: var(--badge-bg);
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-full);
+}
+
+/* --------------------------------------------------------------------------
+   8. Task List & Items
+   -------------------------------------------------------------------------- */
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.task-item {
+  background-color: var(--item-bg);
+  border: 1px solid var(--item-border);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  transition: background-color var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal), opacity var(--transition-normal);
+  animation: taskSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.task-item:hover {
+  background-color: var(--item-hover-bg);
+  border-color: var(--input-border);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Completed Item State */
+.task-item.completed {
+  background-color: var(--item-checked-bg);
+  opacity: 0.82;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Adding & Deleting animation classes */
+@keyframes taskSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.task-item.task-removing {
+  animation: taskSlideOut 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes taskSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 80px;
+    margin-bottom: 0.65rem;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-width: 0;
+  }
+}
+
+/* Task Checkbox & Content */
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 0; /* Prevents text overflow */
+}
+
+.checkbox-btn {
+  background: transparent;
+  border: 2px solid var(--input-border);
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  color: transparent;
+  transition: all var(--transition-fast);
+}
+
+.checkbox-btn:hover {
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.checkbox-btn.checked {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+.task-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+  word-break: break-word;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
+}
+
+/* Edit Mode Input Inside Task */
+.task-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.task-edit-input {
+  flex: 1;
+  background-color: var(--input-bg);
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+/* Task Action Buttons */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  background-color: var(--btn-default-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  line-height: 0;
+}
+
+.action-btn:hover {
+  color: var(--text-main);
+  background-color: var(--btn-default-hover);
+  transform: translateY(-1px);
+}
+
+.action-btn.edit-btn:hover {
+  color: var(--primary);
+}
+
+.action-btn.save-btn {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.action-btn.save-btn:hover {
+  background-color: #059669;
+}
+
+.action-btn.cancel-btn:hover {
+  color: var(--text-main);
+}
+
+.action-btn.delete-btn:hover {
+  color: var(--danger-color);
+  background-color: var(--danger-hover-bg);
+}
+
+/* --------------------------------------------------------------------------
+   9. Empty State
+   -------------------------------------------------------------------------- */
+.empty-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state.hidden {
+  display: none;
+}
+
+.empty-icon-wrapper {
+  color: var(--text-subtle);
+  margin-bottom: 0.75rem;
+  animation: floatSubtle 3s ease-in-out infinite;
+}
+
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.empty-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* --------------------------------------------------------------------------
+   10. App Footer
+   -------------------------------------------------------------------------- */
+.app-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   11. Responsive Media Queries
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  body {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .stat-card {
+    padding: 0.85rem 1rem;
+  }
+
+  .dashboard-card {
+    padding: 1.15rem;
+    border-radius: var(--radius-md);
+  }
+
+  .input-wrapper {
+    flex-direction: column;
+  }
+
+  .primary-btn {
+    width: 100%;
+  }
+
+  .task-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .filter-group {
+    width: 100%;
+    display: flex;
+  }
+
+  .filter-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .toolbar-meta {
+    justify-content: flex-end;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+  }
+
+  .theme-label-text {
+    display: none;
+  }
+
+  .theme-toggle-btn {
+    padding: 0.55rem;
+  }
+}
